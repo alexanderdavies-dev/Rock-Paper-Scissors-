@@ -4,7 +4,7 @@ console.log("Hello World!")
 // Game configuratino and constants
 const CONFIG = {
     MAX_SCORE: 5,
-    INITIAL_MESSAGE: "Choose your move to start the game!"
+    INITIAL_MESSAGE: "Choose your move to start the game! \nFirst to 5 points wins!"
 }
 
 const CHOICES = {
@@ -80,11 +80,11 @@ function getResultMessage(humanChoice, computerChoice, result) {
     const choicesMsg = `You chose ${humanFormatted}, Computer chose ${computerFormatted}.` ;
 
     if (result === RESULTS.DRAW) {
-        return choicesMsg + " It's a draw! 🤝"
+        return choicesMsg + "\n It's a draw! 🤝"
     } else if (WIN_CONDITIONS[humanChoice] === computerChoice) {
-        return choicesMsg + ` ${humanFormatted} beats ${computerFormatted}, so you get a point!`;
+        return choicesMsg + `\n ${humanFormatted} beats ${computerFormatted}, so you get a point!`;
     } else {
-        return choicesMsg + ` ${computerFormatted} beats ${humanFormatted}, so Computer gets a point!`
+        return choicesMsg + `\n ${computerFormatted} beats ${humanFormatted}, so Computer gets a point!`
     }
 }
 
