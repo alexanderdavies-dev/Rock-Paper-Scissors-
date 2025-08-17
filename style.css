@@ -58,6 +58,16 @@ a {
     margin: 0 auto;
 }
 
+.buttons button {
+    background-color: #8caaee;
+    color: #c6d0f5;
+    padding: 10px 20px;
+    margin-top:  20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 /* footer */
 .footer {
     background-color: #303446;
