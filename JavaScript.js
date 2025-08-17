@@ -1,68 +1,75 @@
 console.log("Hello World!")
 
 
-// Game state 
-const gameState = {
-    humanScore: 0,
-    computerScore: 0,
-    maxScore: 5,
-    isGameOver: false
-};
+// Game configuratino and constants
+const CONFIG = {
+    MAX_SCORE: 5,
+    INITIAL_MESSAGE: "Choose your move to start the game!"
+}
 
-// define constants for choices
 const CHOICES = {
     ROCK: "rock",
     PAPER: "paper",
     SCISSORS: "scissors",
 };
 
-// define constants for results
+
 const RESULTS = {
     DRAW: "draw",
     HUMAN_WIN: "human",
     COMPUTER_WIN: "computer"
 };
 
-// define winconditions
-const WINCONDITIONS = {
-        [CHOICES.ROCK]: CHOICES.SCISSORS,
-        [CHOICES.PAPER]: CHOICES.ROCK,
-        [CHOICES.SCISSORS]: CHOICES.PAPER,
+
+const WIN_CONDITIONS = {
+        [CHOICES.ROCK]: CHOICES.SCISSORS, //rock beats scissors
+        [CHOICES.PAPER]: CHOICES.ROCK, //paper beats rock
+        [CHOICES.SCISSORS]: CHOICES.PAPER, //scissors beats paper
     };
 
-// generates a random number 
+
+// game state management
+const gameState = {
+    humanScore: 0,
+    computerScore: 0,
+    maxScore: CONFIG.MAX_SCORE,
+    isGameOver: false
+};
+
+// computer choice functions
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-// generates the computer's choice randomly - updated to use array indexing
 function getComputerChoice() {
-    const choices = [CHOICES.ROCK, CHOICES.PAPER, CHOICES.SCISSORS];
-    return choices[getRandomInt(3)];
+    const choices = Object.values(CHOICES);
+    return choices[getRandomInt(choices.length)];
 }
 
-// determines who wins
+// Game logic functions
 function determineWinner(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
         console.log("It's a draw!");
         return RESULTS.DRAW;
     };
 // define the win conditions - e.g. the win condition for a choice of rock is for the other choice to be scissors
-    return WINCONDITIONS[humanChoice] === computerChoice ? RESULTS.HUMAN_WIN : RESULTS.COMPUTER_WIN;
+    return WIN_CONDITIONS[humanChoice] === computerChoice ? RESULTS.HUMAN_WIN : RESULTS.COMPUTER_WIN;
 }
 
+//Create the result message for each round
 function getResultMessage(humanChoice, computerChoice, result) {
-    const basicMsg = `You chose ${humanChoice}, Computer chose ${computerChoice}.` ;
+    const choicesMsg = `You chose ${humanChoice}, Computer chose ${computerChoice}.` ;
 
     if (result === RESULTS.DRAW) {
-        return basicMsg + "It's a draw!"
-    } else if (WINCONDITIONS[humanChoice] === computerChoice) {
-        return basicMsg + `${humanChoice} beats ${computerChoice}, so you get a point!`;
+        return choicesMsg + "It's a draw!"
+    } else if (WIN_CONDITIONS[humanChoice] === computerChoice) {
+        return choicesMsg + `${humanChoice} beats ${computerChoice}, so you get a point!`;
     } else {
-        return basicMsg + `${computerChoice} beats ${humanChoice}, so Computer gets a point!`
+        return choicesMsg + `${computerChoice} beats ${humanChoice}, so Computer gets a point!`
     }
 }
 
+// Update the score based on the result of each round
 function updateScore(result) {
     if (result === RESULTS.HUMAN_WIN) {
         gameState.humanScore++;
@@ -71,31 +78,64 @@ function updateScore(result) {
     }
 }
 
+
+// UI updates
+
 function updateUi(humanChoice, computerChoice, result) {
     document.getElementById("player-score").textContent = `Player: ${gameState.humanScore}`;
     document.getElementById("computer-score").textContent =`Computer: ${gameState.computerScore}`;
+    
+    if (result === "reset" ){
+        document.getElementById("game-msg").textContent = CONFIG.INITIAL_MESSAGE;
+    } else {
     document.getElementById("game-msg").textContent = getResultMessage(humanChoice, computerChoice, result);
-    ;
+    }
 }
 
+function disableChoiceButtons(disabled = true) {
+    const buttons = document.querySelectorAll(".choice-btn");
+    buttons.forEach(button => {
+        button.disabled = disabled;
+    });
+}
+
+// Check if game has ended and handle game over state
 function gameFinish() {
     if (gameState.humanScore >= gameState.maxScore) {
         gameState.isGameOver = true;
-        console.log("Congratulations, you won the game!");
+        document.getElementById("game-msg").textContent = "Congratulations, you won the game!";
+        console.log("Player wins the game!")
+        disableChoiceButtons(true);
         return true;
     } else if (gameState.computerScore >= gameState.maxScore) {
         gameState.isGameOver = true;
-        console.log("Computer won the game, bad luck!");
+        document.getElementById("game-msg").textContent = "Computer won the game, bad luck!";
+        console.log("Computer wins the game!")
+        disableChoiceButtons(true);
         return true;
     }
     return false;
+}
+
+// Reset the game to initial state
+function resetGame() {
+    gameState.humanScore = 0;
+    gameState.computerScore = 0;
+    gameState.isGameOver = false;
+
+
+    // Reset the UI elements
+    disableChoiceButtons(false);
+    updateUi("", "", "reset");
+
+    console.log("New game started!");
 }
 
 function playRound(humanChoice) {
     //prevent playing if the game is over.
     //gameState.isGameOver is already a boolean value (true or false), so don't need to compare it to anything!
     if (gameState.isGameOver) {
-        console.log("Game Over! Press reset to play again.");
+        document.getElementById("game-msg").textContent = "Game Over! Press reset to play again.";
         return ;
     }
 
@@ -105,19 +145,15 @@ function playRound(humanChoice) {
     updateScore(result);
     updateUi(humanChoice, computerChoice, result);    
 
-console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
+    if(!gameFinish()) {
+        console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
+    }    
 
-gameFinish();
 }
 
-function resetGame() {
-    gameState.humanScore = 0;
-    gameState.computerScore = 0;
-    gameState.isGameOver = false;
-    console.log("New game started!")
-    updateUi("", "", "")
-}
 
+//Event listeners and initialisation 
+function initializeGame () {
  const buttons = document.querySelectorAll(".choice-btn");
 
  buttons.forEach((button) => {
@@ -127,3 +163,13 @@ function resetGame() {
     });
  });
 
+const resetButton = document.querySelector(".reset-btn");
+if (resetButton) {
+    resetButton.addEventListener("click", resetGame);
+}
+
+updateUi ("", "", "reset");
+
+}
+
+document.addEventListener("DOMContentLoaded", initializeGame);
