@@ -127,6 +127,20 @@ function disableChoiceButtons(disabled = true) {
     });
 }
 
+function toggleResetButton(show = false) {
+    const resetButton = document.querySelector(".reset-btn");
+    if (resetButton) {
+        if (show) {
+            resetButton.classList.remove("hidden");
+            resetButton.classList.add("visible");
+        } else {
+            resetButton.classList.remove("visible");
+            resetButton.classList.add("hidden");
+        }
+    }
+}
+
+
 // Check if game has ended and handle game over state
 function gameFinish() {
     if (gameState.humanScore >= gameState.maxScore) {
@@ -134,12 +148,14 @@ function gameFinish() {
         updateGameMessage("Congratulations, you won the game! 🏆");
         console.log("Player wins the game!")
         disableChoiceButtons(true);
+        toggleResetButton(true);
         return true;
     } else if (gameState.computerScore >= gameState.maxScore) {
         gameState.isGameOver = true;
         updateGameMessage("Computer won the game, bad luck! 🤖");
         console.log("Computer wins the game!")
         disableChoiceButtons(true);
+        toggleResetButton(true);
         return true;
     }
     return false;
@@ -154,6 +170,7 @@ function resetGame() {
 
     // Reset the UI elements
     disableChoiceButtons(false);
+    toggleResetButton(false);
     updateUi("", "", "reset");
 
     console.log("New game started!");
@@ -196,6 +213,7 @@ if (resetButton) {
     resetButton.addEventListener("click", resetGame);
 }
 
+toggleResetButton(false);
 updateUi ("", "", "reset");
 
 }
