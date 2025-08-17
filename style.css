@@ -14,7 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(135deg, #24273a 0%, #1e2030 100%);
+    background-color: #1e2030;
     color: #cad3f5;
 }
 
@@ -43,7 +43,6 @@ a:hover {border-bottom-color: #8aadf4;
     padding: 3rem 0;
     background-color: #1e2030;
     color: #c6a0f6;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .header h1 {
@@ -115,6 +114,12 @@ a:hover {border-bottom-color: #8aadf4;
     font-weight: bold;
 }
 
+.choice-btn:hover {
+    background: linear-gradient(135deg, #f5a97f 0%, #ee99a0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(238, 153, 160, 0.4);
+}
+
 .reset-btn {
     background: linear-gradient(135deg, #ee99a0 0%, #f5a97f 100%);
     color: #1e2030;
@@ -167,7 +172,7 @@ a:hover {border-bottom-color: #8aadf4;
 
 /* footer */
 .footer {
-    background-color: #24273a;
+    background-color: #1e2030;
     text-align: center;
     color:#F9FAF8;
     padding: 40px 200px;
