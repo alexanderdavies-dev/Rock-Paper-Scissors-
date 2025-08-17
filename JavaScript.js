@@ -58,11 +58,17 @@ function updateScore(result) {
     }
 }
 
+function updateUi(humanChoice, computerChoice, result) {
+    document.getElementById("player-score").textContent = `Player: ${gameState.humanScore}`;
+    document.getElementById("computer-score").textContent =`Computer: ${gameState.computerScore}`;
+}
+
 function playRound(humanChoice) {
     const computerChoice = getComputerChoice();
     const result = determineWinner(humanChoice, computerChoice);
 
-    updateScore(result);    
+    updateScore(result);
+    updateUi(humanChoice, computerChoice);    
 
 console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
 }
