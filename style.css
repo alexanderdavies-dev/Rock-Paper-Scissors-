@@ -1,0 +1,27 @@
+/* style.css */
+
+
+/* normalise styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* global styling */
+body {
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: #9399b2;
+}
+
+/* header */
+
+.header {
+    display: flex;
+    justify-content: center;
+    padding: 50px 0px;
+    background-color: #45475a;
+    color: #89b4fa;
+}
