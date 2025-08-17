@@ -21,6 +21,13 @@ button {
     cursor: pointer;
 }
 
+a {
+    color: inherit;  /* takes colour from parent */
+    font-family: inherit; /* takes font from parent */
+    font-size: inherit; /* takes font-size from parent */
+    text-decoration: underline;
+}
+
 /* header */
 .header {
     display: flex;
