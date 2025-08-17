@@ -41,6 +41,7 @@ function getComputerChoice() {
     return choices[getRandomInt(3)];
 }
 
+// determines who wins
 function determineWinner(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
         console.log("It's a draw!");
@@ -77,7 +78,27 @@ function updateUi(humanChoice, computerChoice, result) {
     ;
 }
 
+function gameFinish() {
+    if (gameState.humanScore >= gameState.maxScore) {
+        gameState.isGameOver = true;
+        console.log("Congratulations, you won the game!");
+        return true;
+    } else if (gameState.computerScore >= gameState.maxScore) {
+        gameState.isGameOver = true;
+        console.log("Computer won the game, bad luck!");
+        return true;
+    }
+    return false;
+}
+
 function playRound(humanChoice) {
+    //prevent playing if the game is over.
+    //gameState.isGameOver is already a boolean value (true or false), so don't need to compare it to anything!
+    if (gameState.isGameOver) {
+        console.log("Game Over! Press reset to play again.");
+        return ;
+    }
+
     const computerChoice = getComputerChoice();
     const result = determineWinner(humanChoice, computerChoice);
 
@@ -85,6 +106,16 @@ function playRound(humanChoice) {
     updateUi(humanChoice, computerChoice, result);    
 
 console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
+
+gameFinish();
+}
+
+function resetGame() {
+    gameState.humanScore = 0;
+    gameState.computerScore = 0;
+    gameState.isGameOver = false;
+    console.log("New game started!")
+    updateUi("", "", "")
 }
 
  const buttons = document.querySelectorAll(".choice-btn");
