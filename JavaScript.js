@@ -23,6 +23,13 @@ const RESULTS = {
     COMPUTER_WIN: "computer"
 };
 
+// define winconditions
+const WINCONDITIONS = {
+        [CHOICES.ROCK]: CHOICES.SCISSORS,
+        [CHOICES.PAPER]: CHOICES.ROCK,
+        [CHOICES.SCISSORS]: CHOICES.PAPER,
+    };
+
 // generates a random number 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -39,15 +46,20 @@ function determineWinner(humanChoice, computerChoice) {
         console.log("It's a draw!");
         return RESULTS.DRAW;
     };
-
-
 // define the win conditions - e.g. the win condition for a choice of rock is for the other choice to be scissors
-    const winConditions = {
-        [CHOICES.ROCK]: CHOICES.SCISSORS,
-        [CHOICES.PAPER]: CHOICES.ROCK,
-        [CHOICES.SCISSORS]: CHOICES.PAPER,
-    };
-    return winConditions[humanChoice] === computerChoice ? RESULTS.HUMAN_WIN : RESULTS.COMPUTER_WIN;
+    return WINCONDITIONS[humanChoice] === computerChoice ? RESULTS.HUMAN_WIN : RESULTS.COMPUTER_WIN;
+}
+
+function getResultMessage(humanChoice, computerChoice, result) {
+    const basicMsg = `You chose ${humanChoice}, Computer chose ${computerChoice}.` ;
+
+    if (result === RESULTS.DRAW) {
+        return basicMsg + "It's a draw!"
+    } else if (WINCONDITIONS[humanChoice] === computerChoice) {
+        return basicMsg + `${humanChoice} beats ${computerChoice}, so you get a point!`;
+    } else {
+        return basicMsg + `${computerChoice} beats ${humanChoice}, so Computer gets a point!`
+    }
 }
 
 function updateScore(result) {
@@ -61,6 +73,8 @@ function updateScore(result) {
 function updateUi(humanChoice, computerChoice, result) {
     document.getElementById("player-score").textContent = `Player: ${gameState.humanScore}`;
     document.getElementById("computer-score").textContent =`Computer: ${gameState.computerScore}`;
+    document.getElementById("game-msg").textContent = getResultMessage(humanChoice, computerChoice, result);
+    ;
 }
 
 function playRound(humanChoice) {
@@ -68,13 +82,10 @@ function playRound(humanChoice) {
     const result = determineWinner(humanChoice, computerChoice);
 
     updateScore(result);
-    updateUi(humanChoice, computerChoice);    
+    updateUi(humanChoice, computerChoice, result);    
 
 console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
 }
-
-
-
 
  const buttons = document.querySelectorAll(".choice-btn");
 
