@@ -13,6 +13,11 @@ const CHOICES = {
     SCISSORS: "scissors",
 };
 
+const CHOICE_EMOJIS = {
+    [CHOICES.ROCK]: "👊",
+    [CHOICES.PAPER]: "✋",
+    [CHOICES.SCISSORS]: "✌️",
+}
 
 const RESULTS = {
     DRAW: "draw",
@@ -36,7 +41,8 @@ const gameState = {
     isGameOver: false
 };
 
-// computer choice functions
+// utility functions
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -44,6 +50,16 @@ function getRandomInt(max) {
 function getComputerChoice() {
     const choices = Object.values(CHOICES);
     return choices[getRandomInt(choices.length)];
+}
+
+function capitalizeFirst(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+function formatChoice(choice) {
+    const emoji = CHOICE_EMOJIS[choice] || "";
+    const capitalized = capitalizeFirst(choice);
+    return ` ${capitalized} ${emoji}`;
 }
 
 // Game logic functions
@@ -58,14 +74,17 @@ function determineWinner(humanChoice, computerChoice) {
 
 //Create the result message for each round
 function getResultMessage(humanChoice, computerChoice, result) {
-    const choicesMsg = `You chose ${humanChoice}, Computer chose ${computerChoice}.` ;
+    const humanFormatted = formatChoice(humanChoice);
+    const computerFormatted = formatChoice(computerChoice);
+
+    const choicesMsg = `You chose ${humanFormatted}, Computer chose ${computerFormatted}.` ;
 
     if (result === RESULTS.DRAW) {
-        return choicesMsg + "It's a draw!"
+        return choicesMsg + " It's a draw! 🤝"
     } else if (WIN_CONDITIONS[humanChoice] === computerChoice) {
-        return choicesMsg + `${humanChoice} beats ${computerChoice}, so you get a point!`;
+        return choicesMsg + ` ${humanFormatted} beats ${computerFormatted}, so you get a point!`;
     } else {
-        return choicesMsg + `${computerChoice} beats ${humanChoice}, so Computer gets a point!`
+        return choicesMsg + ` ${computerFormatted} beats ${humanFormatted}, so Computer gets a point!`
     }
 }
 
@@ -81,14 +100,23 @@ function updateScore(result) {
 
 // UI updates
 
-function updateUi(humanChoice, computerChoice, result) {
+function updateScoreboard() { 
     document.getElementById("player-score").textContent = `Player: ${gameState.humanScore}`;
     document.getElementById("computer-score").textContent =`Computer: ${gameState.computerScore}`;
+}
+
+function updateGameMessage(message) {
+    document.getElementById("game-msg").textContent = message;
+}
+
+function updateUi(humanChoice, computerChoice, result) {
+   updateScoreboard();
     
     if (result === "reset" ){
-        document.getElementById("game-msg").textContent = CONFIG.INITIAL_MESSAGE;
+        updateGameMessage(CONFIG.INITIAL_MESSAGE);
     } else {
-    document.getElementById("game-msg").textContent = getResultMessage(humanChoice, computerChoice, result);
+        const message = getResultMessage(humanChoice, computerChoice, result);
+        updateGameMessage(message);
     }
 }
 
@@ -103,13 +131,13 @@ function disableChoiceButtons(disabled = true) {
 function gameFinish() {
     if (gameState.humanScore >= gameState.maxScore) {
         gameState.isGameOver = true;
-        document.getElementById("game-msg").textContent = "Congratulations, you won the game!";
+        updateGameMessage("Congratulations, you won the game! 🏆");
         console.log("Player wins the game!")
         disableChoiceButtons(true);
         return true;
     } else if (gameState.computerScore >= gameState.maxScore) {
         gameState.isGameOver = true;
-        document.getElementById("game-msg").textContent = "Computer won the game, bad luck!";
+        updateGameMessage("Computer won the game, bad luck! 🤖");
         console.log("Computer wins the game!")
         disableChoiceButtons(true);
         return true;
