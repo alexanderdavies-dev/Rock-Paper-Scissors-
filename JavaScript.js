@@ -1,78 +1,81 @@
 console.log("Hello World!")
 
+
+// Game state 
+const gameState = {
+    humanScore: 0,
+    computerScore: 0,
+    maxScore: 5,
+    isGameOver: false
+};
+
+// define constants for choices
+const CHOICES = {
+    ROCK: "rock",
+    PAPER: "paper",
+    SCISSORS: "scissors",
+};
+
+// define constants for results
+const RESULTS = {
+    DRAW: "draw",
+    HUMAN_WIN: "human",
+    COMPUTER_WIN: "computer"
+};
+
+// generates a random number 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+// generates the computer's choice randomly - updated to use array indexing
 function getComputerChoice() {
-    let compnum = getRandomInt(3)
-        if (compnum === 0 ) {
-            return "Rock";
-        }
-        else if (compnum === 1) {
-            return "Paper";
-        }
-        else if (compnum === 2) {
-            return "Scissors";
-        }
+    const choices = [CHOICES.ROCK, CHOICES.PAPER, CHOICES.SCISSORS];
+    return choices[getRandomInt(3)];
 }
 
-function getHumanChoice() {
-    let humanChoice = prompt("Please enter Rock, Paper or Scissors: ");
-    return humanChoice;
-}
-
-function playGame() {
-    console.log("Starting a five-round game!")
-
-let humanScore = 0;
-let computerScore = 0;
-
-function playRound(humanChoice, computerChoice) {
-    console.log(`You chose: ${humanChoice}, Computer chose ${computerChoice}`);
-
-    humanChoice = humanChoice.toLowerCase();
-    computerChoice = computerChoice.toLowerCase();
-
+function determineWinner(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
         console.log("It's a draw!");
-        return "draw";
+        return RESULTS.DRAW;
+    };
+
+
+// define the win conditions - e.g. the win condition for a choice of rock is for the other choice to be scissors
+    const winConditions = {
+        [CHOICES.ROCK]: CHOICES.SCISSORS,
+        [CHOICES.PAPER]: CHOICES.ROCK,
+        [CHOICES.SCISSORS]: CHOICES.PAPER,
+    };
+    return winConditions[humanChoice] === computerChoice ? RESULTS.HUMAN_WIN : RESULTS.COMPUTER_WIN;
+}
+
+function updateScore(result) {
+    if (result === RESULTS.HUMAN_WIN) {
+        gameState.humanScore++;
+    } else if (result === RESULTS.COMPUTER_WIN) {
+        gameState.computerScore++;
     }
-    else if (
-        (humanChoice === "rock" && computerChoice === "scissors") ||
-        (humanChoice === "paper" && computerChoice === "rock") ||
-        (humanChoice === "scissors" && computerChoice === "paper")
-    ) {
-        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-        humanScore++;
-        return "human";
-    }
-    else {
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-        computerScore++;
-        return "computer";
-    }
 }
 
-for (let round = 1; round <=5; round++) {
-    console.log(`\n--- Round ${round} ---`);
+function playRound(humanChoice) {
+    const computerChoice = getComputerChoice();
+    const result = determineWinner(humanChoice, computerChoice);
 
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    playRound(humanSelection, computerSelection);
+    updateScore(result);    
 
-    console.log(`Score after round ${round}: Human ${humanScore} - ${computerScore} Computer`);
-}
-
-if (humanScore > computerScore) {
-    console.log("Congrats! You won the game!");
-}
-else if (computerScore> humanScore) {
-    console.log("Bad luck! Computer won the game!");
-}
-else {
-    console.log("The game was a draw!");
-}
+console.log(`Score: Human ${gameState.humanScore} - ${gameState.computerScore} Computer`);
 }
 
-playGame()
+
+
+
+ const buttons = document.querySelectorAll(".choice-btn");
+
+ buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        const choice = e.target.id.replace("-button", "") // turns "rock-button" into "rock"
+        playRound(choice);
+    });
+ });
+
