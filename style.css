@@ -13,15 +13,48 @@ body {
     font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     flex-direction: column;
-    background-color: #9399b2;
+    background-color: #303446;
+}
+
+button {
+    border: none;
+    cursor: pointer;
 }
 
 /* header */
-
 .header {
     display: flex;
     justify-content: center;
     padding: 50px 0px;
-    background-color: #45475a;
+    background-color: #303446;
     color: #89b4fa;
+}
+
+/* main */
+.main {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.scoreboard {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.scores-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* footer */
+.footer {
+    background-color: #303446;
+    text-align: center;
+    color:#F9FAF8;
+    padding: 40px 200px;
 }
